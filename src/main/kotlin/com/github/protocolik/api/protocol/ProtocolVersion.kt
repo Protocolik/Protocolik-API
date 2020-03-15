@@ -82,7 +82,7 @@ enum class ProtocolVersion(
     val versionInfo = VersionInfo(id, displayName)
 
     companion object {
-        val CURRENT = RELEASE_1_12_2
+        val CURRENT = RELEASE_1_15_2
         val values = values()
         private val byId = values.map { it.id to it }.toMap(Int2ObjectOpenHashMap())
         private val byDisplayName = values.map { it.displayName to it }.toMap()

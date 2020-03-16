@@ -16,11 +16,8 @@ class UserConnection(
     var dimension: Dimension = Dimension.OVERWORLD
 
     fun sendPacket(packet: Packet) {
-        channel.eventLoop().execute { channel.write(packet, channel.voidPromise()) }
-    }
-
-    fun receivePacket(packet: Packet) {
-        channel.eventLoop().execute { channel.pipeline().fireChannelRead(packet) }
+        channel.writeAndFlush(packet)
+//        channel.eventLoop().execute { channel.write(packet, channel.voidPromise()) }
     }
 
     companion object {

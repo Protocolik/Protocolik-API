@@ -1,6 +1,7 @@
 package com.github.protocolik.api.protocol
 
 import com.github.protocolik.api.data.VersionMapping
+import com.google.gson.JsonObject
 
 class Protocol
 private constructor(
@@ -9,13 +10,6 @@ private constructor(
 ) : VersionMapping<PacketType>(PacketType::class.java) {
     init {
         clear()
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    fun <T : Packet> createPacket(protocolVersion: ProtocolVersion, id: Int): T? {
-//        val packetType = get(protocolVersion)
-//        return packetType[id]?.createPacket?.invoke() as T?
-        TODO()
     }
 
     companion object {
@@ -27,18 +21,43 @@ private constructor(
         val PLAY_CLIENTBOUND = Protocol(ProtocolState.PLAY, ProtocolDirection.CLIENTBOUND)
         val PLAY_SERVERBOUND = Protocol(ProtocolState.PLAY, ProtocolDirection.SERVERBOUND)
 
-        fun load() {
-            for (value in PacketType.values()) {
-                register(value)
+        fun load(jsonObject: JsonObject) {
+            val packetTypes = PacketType.values().associateBy { it.name }
+            val protocolVersions = ProtocolVersion.values().associateBy { it.displayName }
+            for ((packetTypeName, mappingsJson) in jsonObject.entrySet()) {
+                val packetType = packetTypes[packetTypeName.toUpperCase()]
+                if (packetType != null) {
+                    val mappings = mappingsJson.asJsonObject.entrySet().map { (versionName, hexId) ->
+                        val protocolVersion = protocolVersions[versionName]
+                        if (protocolVersion != null) {
+                            val id = Integer.valueOf(hexId.asString.substring(2), 16)
+                            protocolVersion to id
+                        } else {
+                            null
+                        }
+                    }.filterNotNull()
+                    register(packetType, mappings)
+                } else {
+                    println("Unknown packet type: ${packetTypeName.toUpperCase()}")
+                }
             }
         }
 
-        fun register(packetType: PacketType) {
-//            if (packetType.idMappings.isNotEmpty()) {
-//                val protocol = get(packetType.protocolState, packetType.protocolDirection)
-//                protocol.register(packetType, *packetType.idMappings)
-//            }
-            TODO()
+        fun register(packetType: PacketType, mappings: List<Pair<ProtocolVersion, Int>>) {
+            if (mappings.isNotEmpty()) {
+                val protocol = get(packetType.protocolState, packetType.protocolDirection)
+                try {
+                    protocol.register(packetType, *mappings.toTypedArray())
+                } catch (e: Exception) {
+                    println("packetType=$packetType")
+                    println("mappings=")
+                    mappings.forEach {
+                        println(it)
+                    }
+
+                    throw e
+                }
+            }
         }
 
         operator fun get(

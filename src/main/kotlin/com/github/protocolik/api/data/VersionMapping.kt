@@ -69,10 +69,10 @@ abstract class VersionMapping<T>(
                 if (iterator.hasNext()) {
                     val next = iterator.next()
                     if (mapper.first == next.first) {
-                        log.warning("While registering $obj object, the same versions were specified ${next.first}")
+//                        log.warning("While registering $obj object, the same versions were specified ${next.first}")
                     }
                     if (mapper.second == next.second) {
-                        log.warning("While registering $obj object, the same ids were specified ${next.second}")
+//                        log.warning("While registering $obj object, the same ids were specified ${next.second}")
                     }
                     mapper = next
                 } else {
@@ -95,7 +95,7 @@ abstract class VersionMapping<T>(
 
         fun register(obj: T, vararg ids: Int) {
             if (objectById.containsKey(ids.first()) || idByObject.containsKey(obj)) {
-                error("Object ${ids.first()} $obj already registered by version $version: ${objectById[ids.first()]}")
+                log.severe("Object ${ids.first()} (0x${Integer.toHexString(ids.first())}) $obj already registered by version $version: ${objectById[ids.first()]}")
             }
             for (id in ids) {
                 objectById[id] = obj

@@ -4,12 +4,13 @@ enum class PacketType(
         val protocolState: ProtocolState,
         val protocolDirection: ProtocolDirection
 ) {
-
     HANDSHAKING_SERVERBOUND_SET_PROTOCOL(ProtocolState.HANDSHAKING, ProtocolDirection.SERVERBOUND),
+
+    @Deprecated("Used in pre-Netty versions")
+    HANDSHAKING_SERVERBOUND_LEGACY_SERVER_LIST_PING(ProtocolState.HANDSHAKING, ProtocolDirection.SERVERBOUND),
 
     STATUS_CLIENTBOUND_RESPONSE(ProtocolState.STATUS, ProtocolDirection.CLIENTBOUND),
     STATUS_CLIENTBOUND_PONG(ProtocolState.STATUS, ProtocolDirection.CLIENTBOUND),
-
 
     /*
     STATUS SERVERBOUND
@@ -131,6 +132,12 @@ enum class PacketType(
     PLAY_CLIENTBOUND_DECLARE_RECIPES(ProtocolState.PLAY, ProtocolDirection.CLIENTBOUND),
     PLAY_CLIENTBOUND_DECLARE_TAGS(ProtocolState.PLAY, ProtocolDirection.CLIENTBOUND),
 
+    @Deprecated("Removed in 1.9")
+    PLAY_CLIENTBOUND_UPDATE_ENTITY_NBT(ProtocolState.PLAY, ProtocolDirection.CLIENTBOUND),
+
+    @Deprecated("Removed in 1.9")
+    PLAY_CLIENTBOUND_CHUNK_BULK(ProtocolState.PLAY, ProtocolDirection.CLIENTBOUND),
+
     /*
     PLAY SERVERBOUND
     */
@@ -172,6 +179,7 @@ enum class PacketType(
     PLAY_SERVERBOUND_PLAYER_CHANGE_HELD_ITEM_SLOT(ProtocolState.PLAY, ProtocolDirection.SERVERBOUND),
     PLAY_SERVERBOUND_UPDATE_COMMAND_BLOCK(ProtocolState.PLAY, ProtocolDirection.SERVERBOUND),
     PLAY_SERVERBOUND_UPDATE_COMMAND_BLOCK_MINECART(ProtocolState.PLAY, ProtocolDirection.SERVERBOUND),
+    PLAY_SERVERBOUND_CREATIVE_INVENTORY_ACTION(ProtocolState.PLAY, ProtocolDirection.SERVERBOUND),
     PLAY_SERVERBOUND_UPDATE_JIGSAW_BLOCK(ProtocolState.PLAY, ProtocolDirection.SERVERBOUND),
     PLAY_SERVERBOUND_UPDATE_STRUCTURE_BLOCK(ProtocolState.PLAY, ProtocolDirection.SERVERBOUND),
     PLAY_SERVERBOUND_UPDATE_SIGN(ProtocolState.PLAY, ProtocolDirection.SERVERBOUND),

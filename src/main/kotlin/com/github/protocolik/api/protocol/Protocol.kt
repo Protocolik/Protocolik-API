@@ -1,6 +1,7 @@
 package com.github.protocolik.api.protocol
 
 import com.github.protocolik.api.data.VersionMapping
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 
 class Protocol
@@ -21,7 +22,8 @@ private constructor(
         val PLAY_CLIENTBOUND = Protocol(ProtocolState.PLAY, ProtocolDirection.CLIENTBOUND)
         val PLAY_SERVERBOUND = Protocol(ProtocolState.PLAY, ProtocolDirection.SERVERBOUND)
 
-        fun load(jsonObject: JsonObject) {
+        fun load(jsonElement: JsonElement) {
+            val jsonObject = jsonElement as JsonObject
             val packetTypes = PacketType.values().associateBy { it.name }
             val protocolVersions = ProtocolVersion.values().associateBy { it.displayName }
             for ((packetTypeName, mappingsJson) in jsonObject.entrySet()) {

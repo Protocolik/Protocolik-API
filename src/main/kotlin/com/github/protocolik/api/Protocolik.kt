@@ -2,9 +2,14 @@
 
 package com.github.protocolik.api
 
-import java.io.File
+import com.github.protocolik.api.handler.PacketHandler
+import com.github.protocolik.api.handler.PacketHandlerManager
+import com.github.protocolik.api.protocol.Packet
 import java.util.logging.Logger
 
-val log: Logger = Logger.getLogger("Protocolik")
+object Protocolik : PacketHandlerManager {
+    val log: Logger = Logger.getLogger("Protocolik")
+    override val handlers = HashMap<Class<out Packet>, MutableList<PacketHandler<out Packet>>>()
+}
 
-lateinit var dataFolder: File
+val log get() = Protocolik.log

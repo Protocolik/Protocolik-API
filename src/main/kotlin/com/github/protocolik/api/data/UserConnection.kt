@@ -1,5 +1,7 @@
 package com.github.protocolik.api.data
 
+import com.github.protocolik.api.handler.PacketHandler
+import com.github.protocolik.api.handler.PacketHandlerManager
 import com.github.protocolik.api.minecraft.world.Dimension
 import com.github.protocolik.api.protocol.Packet
 import com.github.protocolik.api.protocol.ProtocolState
@@ -12,12 +14,17 @@ data class UserConnection(
         var protocolVersion: ProtocolVersion = ProtocolVersion.CURRENT,
         var protocolState: ProtocolState = ProtocolState.HANDSHAKING,
         var username: String? = null
-) {
+) : PacketHandlerManager {
+    override val handlers = HashMap<Class<out Packet>, MutableList<PacketHandler<out Packet>>>()
     var dimension: Dimension = Dimension.OVERWORLD
 
     fun sendPacket(packet: Packet) {
         channel.writeAndFlush(packet)
 //        channel.eventLoop().execute { channel.write(packet, channel.voidPromise()) }
+    }
+
+    fun receivePacket(packet: Packet?) {
+        channel.eventLoop().execute { channel.pipeline().fireChannelRead(packet) }
     }
 
     companion object {

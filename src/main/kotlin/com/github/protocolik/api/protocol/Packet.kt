@@ -7,7 +7,8 @@ import java.util.*
 abstract class Packet(
         val packetType: PacketType
 ) {
-    val packetUUID = UUID.randomUUID()
+    val uniqueId = UUID.randomUUID()
+    var isCancelled: Boolean = false
 
     open fun read(byteBuf: ByteBuf, protocolVersion: ProtocolVersion, userConnection: UserConnection) =
             read(byteBuf, protocolVersion)

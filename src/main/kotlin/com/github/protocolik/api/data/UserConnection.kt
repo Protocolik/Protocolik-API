@@ -7,7 +7,7 @@ import com.github.protocolik.api.protocol.ProtocolVersion
 import io.netty.channel.Channel
 import io.netty.util.AttributeKey
 
-class UserConnection(
+data class UserConnection(
         val channel: Channel,
         var protocolVersion: ProtocolVersion = ProtocolVersion.CURRENT,
         var protocolState: ProtocolState = ProtocolState.HANDSHAKING,
